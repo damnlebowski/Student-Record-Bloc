@@ -123,7 +123,7 @@ class _StudentUpdateState extends State<StudentUpdate> {
                           phone: phoneController.text.trim(),
                           imagepath: widget.student.imagepath);
 
-                      updateStudent(widget.index, model);
+                      updateStudent(widget.index, model, context);
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                             builder: (context) => HomePage(),

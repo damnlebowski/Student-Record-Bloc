@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:student_record_bloc/bloc/home/home_bloc.dart';
 import 'package:student_record_bloc/db/functions/db_functions.dart';
 import 'package:student_record_bloc/db/model/student_model.dart';
 
@@ -120,8 +122,7 @@ class _StudentAddState extends State<StudentAdd> {
                             email: emailController.text.trim(),
                             phone: phoneController.text.trim(),
                             imagepath: imagePath);
-
-                        addStudent(model);
+                        addStudent(model, context);
                         Navigator.of(context).pop();
                       }
                     },

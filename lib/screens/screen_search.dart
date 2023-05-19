@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:student_record_bloc/db/functions/db_functions.dart';
 import 'package:student_record_bloc/db/model/student_model.dart';
@@ -32,7 +31,6 @@ class _SearchState extends State<Search> {
                         .toLowerCase()
                         .contains(value.toLowerCase()))
                     .toList();
-                print(searchList);
               }),
               style: TextStyle(),
               autofocus: true,
@@ -56,8 +54,10 @@ class _SearchState extends State<Search> {
                       trailing: IconButton(
                           onPressed: () {
                             studentListNotifier.notifyListeners();
-                            removeStudent(studentListNotifier.value
-                                .indexOf(searchList[index]));
+                            removeStudent(
+                                studentListNotifier.value
+                                    .indexOf(searchList[index]),
+                                context);
 
                             searchList.removeAt(index);
                             setState(() {});

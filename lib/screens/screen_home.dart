@@ -1,6 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:student_record_bloc/bloc/home/home_bloc.dart';
 import 'package:student_record_bloc/db/functions/db_functions.dart';
 import 'package:student_record_bloc/screens/screen_add.dart';
 import 'package:student_record_bloc/screens/screen_details.dart';
@@ -11,6 +14,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    log('message');
     getAllStudent();
     return Scaffold(
       appBar: AppBar(
@@ -38,11 +42,14 @@ class HomePage extends StatelessWidget {
         child: Icon(Icons.person_add),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: ValueListenableBuilder(
-          valueListenable: studentListNotifier,
-          builder: (context, gettingStudendList, child) {
-            return ListView.separated(
+          padding: const EdgeInsets.only(top: 10),
+          child:
+              //  ValueListenableBuilder(
+              // valueListenable: studentListNotifier,
+              // builder: (context, gettingStudendList, child) {
+              // return
+              BlocBuilder<HomeBloc, HomeState>(
+            builder: (context, state) => ListView.separated(
                 itemBuilder: (context, index) {
                   return ListTile(
                     onTap: () {
@@ -52,7 +59,7 @@ class HomePage extends StatelessWidget {
                         },
                       ));
                     },
-                    title: Text(gettingStudendList[index].name),
+                    title: Text(state.modelList[index].name),
                     trailing: IconButton(
                         onPressed: () {
                           showDialog(
@@ -63,13 +70,13 @@ class HomePage extends StatelessWidget {
                                 actions: [
                                   TextButton(
                                       onPressed: () {
-                                        // removeStudent(index);
                                         Navigator.of(context).pop();
                                       },
                                       child: Text('No')),
                                   TextButton(
                                       onPressed: () {
-                                        removeStudent(index);
+                                       
+                                        removeStudent(index,context);
                                         Navigator.of(context).pop();
                                       },
                                       child: Text('Yes'))
@@ -90,10 +97,11 @@ class HomePage extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (context, index) => Divider(),
-                itemCount: gettingStudendList.length);
-          },
-        ),
-      ),
+                itemCount: state.modelList.length),
+          )
+          // },
+          // ),
+          ),
     );
   }
 }
