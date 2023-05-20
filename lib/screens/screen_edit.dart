@@ -154,12 +154,10 @@ class StudentUpdate extends StatelessWidget {
     final imageFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (imageFile != null) {
-      // setState(() {
       tempImgView = imageFile.path;
-      // print('tempImgView => $tempImgView');
+
       BlocProvider.of<ImageBloc>(context)
           .add(OnImageChange(imgPath: tempImgView));
-      // });
     }
   }
 }

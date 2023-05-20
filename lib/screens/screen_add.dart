@@ -1,20 +1,16 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:student_record_bloc/bloc/home/home_bloc.dart';
+import 'package:student_record_bloc/bloc/add_image/add_image_bloc.dart';
 import 'package:student_record_bloc/db/functions/db_functions.dart';
 import 'package:student_record_bloc/db/model/student_model.dart';
 
-class StudentAdd extends StatefulWidget {
+class StudentAdd extends StatelessWidget {
   StudentAdd({super.key});
 
-  @override
-  State<StudentAdd> createState() => _StudentAddState();
-}
-
-class _StudentAddState extends State<StudentAdd> {
   String imagePath = 'x';
 
   TextEditingController nameController = TextEditingController();
@@ -27,6 +23,7 @@ class _StudentAddState extends State<StudentAdd> {
 
   @override
   Widget build(BuildContext context) {
+    log('It cant be build more than once');
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -38,65 +35,74 @@ class _StudentAddState extends State<StudentAdd> {
               height: 120,
               width: 120,
               child: ClipRRect(
-                  // borderRadius: BorderRadius.circular(20),
                   child: InkWell(
-                child: CircleAvatar(
-                  radius: 75,
-                  backgroundImage: imagePath == 'x'
-                      ? AssetImage('assests/avatar.png') as ImageProvider
-                      : FileImage(File(imagePath)),
+                child: BlocBuilder<AddImageBloc, AddImageState>(
+                  builder: (context, state) {
+                    log('It will build more than once');
+
+                    imagePath = state.imagePath!;
+                    state.imagePath = 'x';
+
+                    return CircleAvatar(
+                      radius: 75,
+                      backgroundImage: imagePath == 'x'
+                          ? const AssetImage('assests/avatar.png')
+                              as ImageProvider
+                          : FileImage(File(imagePath)),
+                    );
+                  },
                 ),
                 onTap: () {
-                  takePic();
+                  takePic(context);
                 },
               )),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             TextField(
               controller: nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'Enter Your Name',
                   labelText: 'Name',
                   border: OutlineInputBorder()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextField(
               controller: ageController,
               maxLength: 2,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'Enter Your Age',
                   labelText: 'Age',
                   border: OutlineInputBorder()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextField(
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'Enter Your Email',
                   labelText: 'Email',
                   border: OutlineInputBorder()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextField(
               controller: phoneController,
               maxLength: 10,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'Enter Your Phone Number',
                   labelText: 'Phone',
                   border: OutlineInputBorder()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -106,8 +112,8 @@ class _StudentAddState extends State<StudentAdd> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancel')),
-                SizedBox(
+                    child: const Text('Cancel')),
+                const SizedBox(
                   width: 20,
                 ),
                 ElevatedButton(
@@ -126,7 +132,7 @@ class _StudentAddState extends State<StudentAdd> {
                         Navigator.of(context).pop();
                       }
                     },
-                    child: Text('Save'))
+                    child: const Text('Save'))
               ],
             )
           ]),
@@ -135,13 +141,13 @@ class _StudentAddState extends State<StudentAdd> {
     );
   }
 
-  takePic() async {
+  takePic(BuildContext context) async {
     final imageFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (imageFile != null) {
-      setState(() {
-        imagePath = imageFile.path;
-      });
+      imagePath = imageFile.path;
+      BlocProvider.of<AddImageBloc>(context)
+          .add(OnImageUpdate(imagePath: imagePath));
     }
   }
 }

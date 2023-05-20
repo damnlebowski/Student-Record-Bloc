@@ -14,7 +14,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('message');
     getAllStudent();
     return Scaffold(
       appBar: AppBar(
@@ -43,12 +42,7 @@ class HomePage extends StatelessWidget {
       ),
       body: Padding(
           padding: const EdgeInsets.only(top: 10),
-          child:
-              //  ValueListenableBuilder(
-              // valueListenable: studentListNotifier,
-              // builder: (context, gettingStudendList, child) {
-              // return
-              BlocBuilder<HomeBloc, HomeState>(
+          child: BlocBuilder<HomeBloc, HomeState>(
             builder: (context, state) => ListView.separated(
                 itemBuilder: (context, index) {
                   return ListTile(
@@ -75,8 +69,7 @@ class HomePage extends StatelessWidget {
                                       child: Text('No')),
                                   TextButton(
                                       onPressed: () {
-                                       
-                                        removeStudent(index,context);
+                                        removeStudent(index, context);
                                         Navigator.of(context).pop();
                                       },
                                       child: Text('Yes'))
@@ -98,10 +91,7 @@ class HomePage extends StatelessWidget {
                 },
                 separatorBuilder: (context, index) => Divider(),
                 itemCount: state.modelList.length),
-          )
-          // },
-          // ),
-          ),
+          )),
     );
   }
 }

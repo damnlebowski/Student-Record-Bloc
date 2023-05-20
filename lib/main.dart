@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:student_record_bloc/bloc/add_image/add_image_bloc.dart';
 import 'package:student_record_bloc/bloc/home/home_bloc.dart';
 import 'package:student_record_bloc/bloc/image/image_bloc.dart';
 import 'package:student_record_bloc/db/model/student_model.dart';
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => ImageBloc(),
+        ),
+        BlocProvider(
+          create: (context) => AddImageBloc(),
         ),
       ],
       child: MaterialApp(
