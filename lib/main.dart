@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:student_record_bloc/bloc/home/home_bloc.dart';
+import 'package:student_record_bloc/bloc/image/image_bloc.dart';
 import 'package:student_record_bloc/db/model/student_model.dart';
 import 'package:student_record_bloc/screens/screen_home.dart';
 
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => HomeBloc(),
+        ),
+        BlocProvider(
+          create: (context) => ImageBloc(),
         ),
       ],
       child: MaterialApp(

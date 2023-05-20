@@ -1,36 +1,39 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:student_record_bloc/bloc/image/image_bloc.dart';
 import 'package:student_record_bloc/db/functions/db_functions.dart';
 import 'package:student_record_bloc/db/model/student_model.dart';
 import 'package:student_record_bloc/screens/screen_home.dart';
 
-class StudentUpdate extends StatefulWidget {
-  StudentUpdate(
-      {super.key, required StudentModel this.student, required int this.index});
+class StudentUpdate extends StatelessWidget {
+  StudentUpdate({super.key, required this.student, required this.index});
   StudentModel student;
   int index;
 
-  @override
-  State<StudentUpdate> createState() => _StudentUpdateState();
-}
+  String tempImgView = '';
 
-class _StudentUpdateState extends State<StudentUpdate> {
   late TextEditingController nameController =
-      TextEditingController(text: widget.student.name);
+      TextEditingController(text: student.name);
 
   late TextEditingController ageController =
-      TextEditingController(text: widget.student.age);
+      TextEditingController(text: student.age);
 
   late TextEditingController emailController =
-      TextEditingController(text: widget.student.email);
+      TextEditingController(text: student.email);
 
   late TextEditingController phoneController =
-      TextEditingController(text: widget.student.phone);
+      TextEditingController(text: student.phone);
 
   @override
   Widget build(BuildContext context) {
+    // print('tempImgView => $tempImgView');
+
+    tempImgView = studentListNotifier.value[index].imagepath!;
+    // print('tempImgView => $tempImgView');
+
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -40,63 +43,68 @@ class _StudentUpdateState extends State<StudentUpdate> {
               Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             InkWell(
               onTap: () {
-                updatePic();
+                updatePic(context);
               },
-              child: CircleAvatar(
-                  radius: 75,
-                  backgroundImage: studentListNotifier
-                              .value[widget.index].imagepath ==
-                          'x'
-                      ? AssetImage('assests/avatar.png') as ImageProvider
-                      : FileImage(File(
-                          studentListNotifier.value[widget.index].imagepath!))),
+              child: BlocBuilder<ImageBloc, ImageState>(
+                builder: (context, state) {
+                  tempImgView = (tempImgView != student.imagepath
+                      ? state.imgPath
+                      : tempImgView)!;
+                  return CircleAvatar(
+                      radius: 75,
+                      backgroundImage: tempImgView == 'x'
+                          ? const AssetImage('assests/avatar.png')
+                              as ImageProvider
+                          : FileImage(File(tempImgView)));
+                },
+              ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             TextField(
               controller: nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'Enter Your Name',
                   labelText: 'Name',
                   border: OutlineInputBorder()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextField(
               controller: ageController,
               maxLength: 2,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'Enter Your Age',
                   labelText: 'Age',
                   border: OutlineInputBorder()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextField(
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'Enter Your Email',
                   labelText: 'Email',
                   border: OutlineInputBorder()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             TextField(
               controller: phoneController,
               maxLength: 10,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   hintText: 'Enter Your Phone Number',
                   labelText: 'Phone',
                   border: OutlineInputBorder()),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
@@ -104,10 +112,11 @@ class _StudentUpdateState extends State<StudentUpdate> {
               children: [
                 ElevatedButton(
                     onPressed: () {
+                      tempImgView = '';
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancel')),
-                SizedBox(
+                    child: const Text('Cancel')),
+                const SizedBox(
                   width: 20,
                 ),
                 ElevatedButton(
@@ -121,9 +130,9 @@ class _StudentUpdateState extends State<StudentUpdate> {
                           age: ageController.text.trim(),
                           email: emailController.text.trim(),
                           phone: phoneController.text.trim(),
-                          imagepath: widget.student.imagepath);
+                          imagepath: tempImgView);
 
-                      updateStudent(widget.index, model, context);
+                      updateStudent(index, model, context);
                       Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                             builder: (context) => HomePage(),
@@ -131,7 +140,7 @@ class _StudentUpdateState extends State<StudentUpdate> {
                           (route) => false);
                     }
                   },
-                  child: Text('Update'),
+                  child: const Text('Update'),
                 )
               ],
             )
@@ -141,13 +150,16 @@ class _StudentUpdateState extends State<StudentUpdate> {
     );
   }
 
-  updatePic() async {
+  updatePic(BuildContext context) async {
     final imageFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (imageFile != null) {
-      setState(() {
-        widget.student.imagepath = imageFile.path;
-      });
+      // setState(() {
+      tempImgView = imageFile.path;
+      // print('tempImgView => $tempImgView');
+      BlocProvider.of<ImageBloc>(context)
+          .add(OnImageChange(imgPath: tempImgView));
+      // });
     }
   }
 }
