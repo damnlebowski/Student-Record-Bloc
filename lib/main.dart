@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:student_record_bloc/bloc/add_image/add_image_bloc.dart';
 import 'package:student_record_bloc/bloc/home/home_bloc.dart';
 import 'package:student_record_bloc/bloc/image/image_bloc.dart';
+import 'package:student_record_bloc/bloc/search/search_bloc.dart';
 import 'package:student_record_bloc/db/model/student_model.dart';
 import 'package:student_record_bloc/screens/screen_home.dart';
 
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => AddImageBloc(),
+        ),
+        BlocProvider(
+          create: (context) => SearchBloc(),
         ),
       ],
       child: MaterialApp(
