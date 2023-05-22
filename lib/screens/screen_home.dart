@@ -1,6 +1,4 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:student_record_bloc/bloc/home/home_bloc.dart';
@@ -17,7 +15,7 @@ class HomePage extends StatelessWidget {
     getAllStudent();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Student List'),
+        title: const Text('Student List'),
         actions: [
           IconButton(
               onPressed: () {
@@ -27,7 +25,7 @@ class HomePage extends StatelessWidget {
                   },
                 ));
               },
-              icon: Icon(Icons.search))
+              icon: const Icon(Icons.search))
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -38,7 +36,7 @@ class HomePage extends StatelessWidget {
             },
           ));
         },
-        child: Icon(Icons.person_add),
+        child: const Icon(Icons.person_add),
       ),
       body: Padding(
           padding: const EdgeInsets.only(top: 10),
@@ -60,36 +58,34 @@ class HomePage extends StatelessWidget {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
-                                title: Text('do you want to delete'),
+                                title: const Text('do you want to delete'),
                                 actions: [
                                   TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text('No')),
+                                      child: const Text('No')),
                                   TextButton(
                                       onPressed: () {
                                         removeStudent(index, context);
                                         Navigator.of(context).pop();
                                       },
-                                      child: Text('Yes'))
+                                      child: const Text('Yes'))
                                 ],
                               );
                             },
                           );
                         },
-                        icon: Icon(Icons.delete)),
+                        icon: const Icon(Icons.delete)),
                     leading: CircleAvatar(
                         radius: 30,
-                        backgroundImage: studentListNotifier
-                                    .value[index].imagepath ==
-                                'x'
-                            ? AssetImage('assests/avatar.png') as ImageProvider
-                            : FileImage(File(
-                                studentListNotifier.value[index].imagepath!))),
+                        backgroundImage: studentList[index].imagepath == 'x'
+                            ? const AssetImage('assests/avatar.png')
+                                as ImageProvider
+                            : FileImage(File(studentList[index].imagepath!))),
                   );
                 },
-                separatorBuilder: (context, index) => Divider(),
+                separatorBuilder: (context, index) => const Divider(),
                 itemCount: state.modelList.length),
           )),
     );

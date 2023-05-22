@@ -29,13 +29,12 @@ class StudentUpdate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print('tempImgView => $tempImgView');
-
-    tempImgView = studentListNotifier.value[index].imagepath!;
-    // print('tempImgView => $tempImgView');
+    tempImgView = studentList[index].imagepath!;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: const Text('Edit Profile'),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 30, 10, 10),

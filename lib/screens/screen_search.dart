@@ -15,7 +15,7 @@ class Search extends StatelessWidget {
   Widget build(BuildContext context) {
     log('main builder call', time: DateTime.now());
     BlocProvider.of<SearchBloc>(context)
-        .add(OnSearch(allStudents: studentListNotifier.value, value: ''));
+        .add(OnSearch(allStudents: studentList, value: ''));
     return Scaffold(
       appBar: AppBar(),
       body: Column(
@@ -24,9 +24,8 @@ class Search extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             child: TextField(
               controller: searchController,
-              onChanged: (value) => BlocProvider.of<SearchBloc>(context).add(
-                  OnSearch(
-                      allStudents: studentListNotifier.value, value: value)),
+              onChanged: (value) => BlocProvider.of<SearchBloc>(context)
+                  .add(OnSearch(allStudents: studentList, value: value)),
               style: const TextStyle(),
               autofocus: true,
               decoration: const InputDecoration(
@@ -44,7 +43,7 @@ class Search extends StatelessWidget {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return StudentDetails(
-                                    index: studentListNotifier.value
+                                    index: studentList
                                         .indexOf(state.searchList[index]));
                               },
                             ));
@@ -53,14 +52,14 @@ class Search extends StatelessWidget {
                           trailing: IconButton(
                               onPressed: () {
                                 removeStudent(
-                                    studentListNotifier.value
+                                    studentList
                                         .indexOf(state.searchList[index]),
                                     context);
 
                                 state.searchList.removeAt(index);
                                 BlocProvider.of<SearchBloc>(context).add(
                                     OnSearch(
-                                        allStudents: studentListNotifier.value,
+                                        allStudents: studentList,
                                         value: searchController.text));
                               },
                               icon: const Icon(Icons.delete)),

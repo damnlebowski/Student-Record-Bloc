@@ -1,17 +1,18 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:student_record_bloc/db/functions/db_functions.dart';
 import 'package:student_record_bloc/screens/screen_edit.dart';
 
+const kHight = SizedBox(height: 10);
+
 class StudentDetails extends StatelessWidget {
-  StudentDetails({super.key, required int this.index});
+  StudentDetails({super.key, required this.index});
   int index;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -21,49 +22,36 @@ class StudentDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CircleAvatar(
-                  backgroundImage:
-                      studentListNotifier.value[index].imagepath == 'x'
-                          ? AssetImage('assests/avatar.png') as ImageProvider
-                          : FileImage(
-                              File(studentListNotifier.value[index].imagepath!)),
+                  backgroundImage: studentList[index].imagepath == 'x'
+                      ? const AssetImage('assests/avatar.png') as ImageProvider
+                      : FileImage(File(studentList[index].imagepath!)),
                   radius: 80,
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Name:              ${studentListNotifier.value[index].name}',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Age:                ${studentListNotifier.value[index].age}',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Email:              ${studentListNotifier.value[index].email}',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Phone:              ${studentListNotifier.value[index].phone}',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
+                const SizedBox(height: 20),
+                Table(children: [
+                  TableRow(children: [
+                    ProfileText(data: 'Name'),
+                    ProfileText(data: studentList[index].name),
+                  ]),
+                  TableRow(children: [
+                    ProfileText(data: 'Age'),
+                    ProfileText(data: studentList[index].age),
+                  ]),
+                  TableRow(children: [
+                    ProfileText(data: 'Email'),
+                    ProfileText(data: studentList[index].email),
+                  ]),
+                  TableRow(children: [
+                    ProfileText(data: 'Phone'),
+                    ProfileText(data: studentList[index].phone),
+                  ]),
+                ]),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Close'),
+                  child: const Text('Close'),
                 )
               ],
             ),
@@ -74,12 +62,30 @@ class StudentDetails extends StatelessWidget {
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) {
-              return StudentUpdate(
-                  student: studentListNotifier.value[index], index: index);
+              return StudentUpdate(student: studentList[index], index: index);
             },
           ));
         },
-        child: Icon(Icons.edit),
+        child: const Icon(Icons.edit),
+      ),
+    );
+  }
+}
+
+class ProfileText extends StatelessWidget {
+  ProfileText({super.key, required this.data});
+  String data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Text(
+        data,
+        style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            overflow: TextOverflow.clip),
       ),
     );
   }
